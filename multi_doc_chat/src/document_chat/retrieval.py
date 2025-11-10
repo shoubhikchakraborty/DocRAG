@@ -84,6 +84,9 @@ class ConversationalRag:
             log.error("Failed to load retriver from FAISS", error= str(e))
             raise DocumentPortalException("Failed to load retriver from FAISS", sys)
         
+
+    
+        
     def invoke(self, user_input, chat_history= None):
         try:
             if self.chain is None:

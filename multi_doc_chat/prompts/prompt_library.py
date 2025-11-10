@@ -11,13 +11,19 @@ contextualized_prompt_query= ChatPromptTemplate.from_messages([
 ])
 
 
-context_qa_prompt= ChatPromptTemplate.from_messages([
+context_qa_prompt = ChatPromptTemplate.from_messages([
     ("system", (
-        """ You are an assistant designed to answer question based on the provided context.Rely only on the context provided to you. If answer is not present in the
-        context respond the answer by your own. If you are confused reagarding the user question, ask to clarify it. Keep your answer concise along with reasoning in less than three sentences.
-        """
+        """You are an assistant designed to answer questions based **only** on the provided CONTEXT.  
+        - Use the context to answer; do NOT invent facts outside it.  
+        - If the answer is not present in the CONTEXT, respond exactly: "Answer not present in documents".  
+        - If you need clarification from the user, ask a clarifying question.  
+        - Keep your answer concise (answer + brief reasoning) in fewer than three sentences."""
     )),
+    # include chat history for conversational context if relevant
     MessagesPlaceholder("chat_history"),
+    # inject the retrieved documents here so the LLM sees them
+    ("system", "Context (use only this to answer):\n{context}"),
+    # then the user's question
     ("human", "{input}"),
 ])
 
